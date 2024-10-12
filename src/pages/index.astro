@@ -1,0 +1,59 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+const books = await getCollection("books");
+
+export const prerender = true;
+---
+
+<Layout title="Dev books">
+  <section class="mb-24 justify-center">
+    <h1 class="text-center text-7xl font-extrabold">
+      Mis 🥴<span class="block">libros favoritos</span>
+    </h1>
+    <p class="text-xs text-slate-400 text-center">
+      Experimentando con <span
+        ><a href="https://astro.build/" class="underline">Astro</a></span
+      >
+    </p>
+  </section>
+
+  <section>
+    <div class="px-4 mx-auto max-w-screen-xl">
+      <div class="grid gap-6 gap-x-6 md:grid-cols-2">
+        {
+          books.map((book) => {
+            const { slug, data } = book;
+            const { title, description, img, readtime } = data;
+
+            return (
+              <article class="flex">
+                <a
+                  class="mb-2 xl:mb-0 transition hover:scale-110"
+                  href={`/book/${slug}`}
+                >
+                  <img
+                    transition:name={`img-${slug}`}
+                    class="mr-5 w-48 rounded w-full-rounded-lg"
+                    src={`/${img}`}
+                    alt={title}
+                  />
+                </a>
+
+                <div class="flex flex-col justify-center">
+                  <h2 class="mb-2 text-2xl font-bold leading-tight text-white">
+                    {title}
+                  </h2>
+
+                  <p class="mb-4 text-gray-300 max-w-sm">{description}</p>
+                  <span class="text-xs">⌛ Lectura en {readtime} minutos</span>
+                </div>
+              </article>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+</Layout>
